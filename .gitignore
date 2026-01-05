@@ -1,16 +1,5 @@
 # Virtual environment
-env/
-venv/
+python venv env 
+venv\Scripts\acivate
+pip install django 
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# Django
-db.sqlite3
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
