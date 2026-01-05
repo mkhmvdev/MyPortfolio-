@@ -17,3 +17,27 @@ class Portfolio(models.Model):
         verbose_name = "proekt" 
         verbose_name_plural = "portfolio"
 
+class ResumeEducation(models.Model):
+    study_name = models.CharField(max_length=30 )
+    study_year = models.IntegerField(("O‘qish yili"))
+    study_about = models.TextField()
+    
+    def __str__(self):
+        return self.study_name
+    
+    class Meta:
+        verbose_name = "O'qish" 
+        verbose_name_plural = "Kurs"
+        
+class WorkExperience(models.Model):
+    company_name = models.CharField(max_length=30 )
+    company_year = models.IntegerField(("O‘qish yili"))
+    company_about = models.TextField()
+
+    def __str__(self):
+        return self.company_name
+    
+    class Meta:
+        verbose_name = "Tajriba" 
+        verbose_name_plural = "Ish"
+    
