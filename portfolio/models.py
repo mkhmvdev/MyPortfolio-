@@ -9,6 +9,7 @@ class Portfolio(models.Model):
         null=True
     )
     context_object_name = "potfolio"
+    git_url = models.URLField(blank=True, max_length=200)
     
     def __str__(self):
         return self.name

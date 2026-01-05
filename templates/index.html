@@ -210,11 +210,11 @@
           <p>
               Чем я могу быть полезен: <br>
 
-              ✅ Создание Telegram-ботов под ключ (заказы, уведомления, парсинг, автоответы) <br>
-              ✅ Разработка сайтов (лендинги, корпоративные сайты, админки) <br>
-              ✅ Парсинг сайтов, автоматизация и скрипты на Python <br>
-              ✅ Интеграция API, базы данных (SQL) <br>
-              ✅ Доработка и исправление кода <br>  
+              Создание Telegram-ботов под ключ (заказы, уведомления, парсинг, автоответы) <br>
+              Разработка сайтов (лендинги, корпоративные сайты, админки) <br>
+              Парсинг сайтов, автоматизация и скрипты на Python <br>
+              Интеграция API, базы данных (SQL) <br>
+              Доработка и исправление кода <br>  
           </p>
         </section>
 
@@ -608,12 +608,13 @@
                   </div>
 
                   {% if project.image %}
-                    <img style=" width 200px; height:200px;" src="{{ project.image.url }}" alt="finance" loading="lazy">
+                    <img style=" width:259.28px; height:200px;" src="{{ project.image.url }}" alt="finance" loading="lazy">
                   {% endif %}
                 </figure>
-
-                <h3 class="project-title">{{project.name}}</h3>
-
+                <div class="names"> 
+                  <h3 class="project-title">{{project.name}}</h3>
+                  <a class="color_blue"  href="{{project.git_url}}"><img style="width:30px ; height:30px ; border-radius:50%;" src="{% static "/images/git.png" %}" alt=""></a>
+                </div>
               </a>
             </li>
             {% endfor %}
