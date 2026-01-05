@@ -9,6 +9,6 @@ class View(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["works"] = WorkExperience.objects.all().order_by("-id")
-        context["educations"] = ResumeEducation.objects.all().order_by("-id")
+        context["works"] = WorkExperience.objects.all().order_by("id")
+        context["educations"] = ResumeEducation.objects.all().order_by("id")
         return context
