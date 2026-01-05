@@ -416,43 +416,20 @@
 
           <ol class="timeline-list">
 
+            {% for Education in educations  %}
             <li class="timeline-item">
 
-              <h4 class="h4 timeline-item-title">Kompyuter academy</h4>
+              <h4 class="h4 timeline-item-title">{{Education.study_name}}</h4>
 
-              <span>2023</span>
+              <span>{{Education.study_year}}</span>
 
               <p class="timeline-text">
-                В 2023 году я успешно окончил курс Frontend-разработки в Computer Academy, где получил практические навыки современной веб-разработки.    
+                {{Education.study_about}}
               </p>
 
             </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Self Study</h4>
-
-              <span>2024</span>
-
-              <p class="timeline-text">
-                В 2024 году занимался самостоятельным обучением (self-study), освоил написание парсеров и разработку Telegram-ботов, используя обучающие YouTube-курсы и практику.
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Monday academy</h4>
-
-              <span>2025</span>
-
-              <p class="timeline-text">
-              В 2025 году успешно окончил курсы Backend-разработки на Python (Django) в академии Monday, получив практический опыт разработки серверных приложений.
-              </p>
-
-            </li>
-
-          </ol>
+            {% endfor %}
+            
 
         </section>
 
@@ -467,31 +444,19 @@
           </div>
 
           <ol class="timeline-list">
-
+            {% for Work in works %}
             <li class="timeline-item">
 
-              <h4 class="h4 timeline-item-title">IT-центр</h4>
+              <h4 class="h4 timeline-item-title">{{Work.company_name}}</h4>
 
-              <span>2024</span>
+              <span>{{Work.company_year}}</span>
 
               <p class="timeline-text">
-                В 2024 году работал в IT-центре в составе фриланс-команды. Участвовал в разработке Telegram-ботов и создании парсеров для автоматизации сбора и обработки данных.
+                {{Work.company_about}}
               </p>
 
             </li>
-
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Kwork</h4>
-
-              <span>2025</span>
-
-              <p class="timeline-text">
-              Рекомендую также посетить мой профиль на Kwork по ссылке ниже — там вы найдёте отзывы клиентов и примеры моих работ. <br>
-              <a href="https://kwork.ru/user/maxmudovraxmatjon" style="color: rgb(32, 156, 187); font-size:bold; text-decoration:underline;">kwork акаунт</a>
-            </li>
-
+            {% endfor %}
           </ol>
 
         </section>
@@ -633,9 +598,9 @@
           <ul class="project-list">
 
 
-            {% for project in object_list  %}
+            {% for project in projects  %}
             <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
+              <a href="#">  
 
                 <figure class="project-img">
                   <div class="project-item-icon-box">
