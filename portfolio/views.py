@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from .models import Portfolio, ResumeEducation , WorkExperience
+from .models import Portfolio, ResumeEducation , WorkExperience , ProfileEdit
 
 class View(ListView):
     model = Portfolio
@@ -11,4 +11,5 @@ class View(ListView):
         context = super().get_context_data(**kwargs)
         context["works"] = WorkExperience.objects.all().order_by("id")
         context["educations"] = ResumeEducation.objects.all().order_by("id")
+        context["profile"] = ProfileEdit.objects.all()
         return context

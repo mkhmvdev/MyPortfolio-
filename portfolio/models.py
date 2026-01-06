@@ -46,3 +46,22 @@ class WorkExperience(models.Model):
         verbose_name = "Tajriba" 
         verbose_name_plural = "Ish"
     
+    
+class ProfileEdit(models.Model):
+    profile_photo = models.ImageField(
+        upload_to="Portfolio/" , 
+        blank=True ,
+        null= True)
+    name = models.CharField(max_length=20)
+    email = models.CharField(max_length=50)
+    phone_number = models.BigIntegerField(("Telefon nomer") , )
+    brithday = models.DateField(
+        null=True, 
+        blank=True,
+        help_text="Please use the format YYYY-MM-DD"
+    )
+    location =models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.name
+
