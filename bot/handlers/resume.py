@@ -1,54 +1,74 @@
-from asgiref.sync import sync_to_async
 from aiogram import Router, F
 from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
+from asgiref.sync import sync_to_async
 from portfolio.models import ResumeEducation
+import html
 
 router = Router()
-ADMIN_IDS = [7294943620]
 
-@router.message(F.text == "/resume")
-async def list_resume(message: Message):
-    if message.from_user.id not in ADMIN_IDS:
-        await message.reply("Sizga ruxsat yo‘q.")
+class ResumeStates(StatesGroup):
+    study_year = State()
+    study_name = State()
+    study_about = State()
+
+@router.message(F.text == "/resume_add")
+async def start_add_resume(message: Message, state: FSMContext):
+    await message.reply("O‘qish yilini kiriting:")
+    await state.set_state(ResumeStates.study_year)
+
+@router.message(ResumeStates.study_year)
+async def resume_year(message: Message, state: FSMContext):
+    if not message.text.isdigit():
+        await message.reply("Faqat raqam kiriting (yil):")
         return
+    await state.update_data(study_year=int(message.text))
+    await message.reply("Kurs yoki o‘quv markazi nomini kiriting:")
+    await state.set_state(ResumeStates.study_name)
 
+@router.message(ResumeStates.study_name)
+async def resume_name(message: Message, state: FSMContext):
+    await state.update_data(study_name=message.text)
+    await message.reply("Qo‘shimcha ma’lumot yozing:")
+    await state.set_state(ResumeStates.study_about)
+
+@router.message(ResumeStates.study_about)
+async def resume_about(message: Message, state: FSMContext):
+    data = await state.get_data()
+    resume = ResumeEducation(
+        study_year=data['study_year'],
+        study_name=data['study_name'],
+        study_about=message.text
+    )
+    await sync_to_async(resume.save)()
+    await message.reply(f"O‘qish tajribasi '{html.escape(resume.study_name)}' saqlandi!")
+    await state.clear()
+
+
+# Ko'rish
+@router.message(F.text == "/resume_list")
+async def list_resume(message: Message):
     resumes = await sync_to_async(list)(ResumeEducation.objects.all())
     if not resumes:
-        await message.reply("Hali resume yo‘q.")
+        await message.reply("Resume ro‘yxati bo‘sh")
         return
-    
-    msg = "\n".join([f"{r.id}. {r.study_name}" for r in resumes])
-    await message.reply(f"Resume ro'yxati:\n{msg}")
+    text = "🎓 Resume ro‘yxati:\n\n"
+    for r in resumes:
+        text += f"ID: {r.id}\nYil: {r.study_year}\nNom: {r.study_name}\nDescription: {r.study_about}\n\n"
+    await message.reply(text)
 
-@router.message(F.text.startswith("/add_resume"))
-async def add_resume(message: Message):
-    if message.from_user.id not in ADMIN_IDS:
-        await message.reply("Sizga ruxsat yo‘q.")
-        return
-
-    parts = message.text.split(maxsplit=1)
-    if len(parts) < 2:
-        await message.reply("Iltimos, nom yozing: /add_resume <study_name>")
-        return
-    
-    resume = await sync_to_async(ResumeEducation.objects.create)(study_name=parts[1], study_year=0, study_about="")
-    await message.reply(f"Resume '{resume.study_name}' qo‘shildi!")
-
-@router.message(F.text.startswith("/delete_resume"))
+# O'chirish
+@router.message(F.text.startswith("/resume_delete"))
 async def delete_resume(message: Message):
-    if message.from_user.id not in ADMIN_IDS:
-        await message.reply("Sizga ruxsat yo‘q.")
+    parts = message.text.split()
+    if len(parts) != 2 or not parts[1].isdigit():
+        await message.reply("Foydalanish: /resume_delete <id>")
         return
-
-    parts = message.text.split(maxsplit=1)
-    if len(parts) < 2 or not parts[1].isdigit():
-        await message.reply("Iltimos, ID raqamini yozing: /delete_resume <id>")
-        return
-
     resume_id = int(parts[1])
-    try:
-        resume = await sync_to_async(ResumeEducation.objects.get)(id=resume_id)
-        await sync_to_async(resume.delete)()
-        await message.reply(f"Resume '{resume.study_name}' o‘chirildi!")
-    except ResumeEducation.DoesNotExist:
-        await message.reply("Bunday ID topilmadi.")
+    resume = await sync_to_async(ResumeEducation.objects.filter(id=resume_id).first)()
+    if not resume:
+        await message.reply("Bunday ID mavjud emas")
+        return
+    await sync_to_async(resume.delete)()
+    await message.reply(f"Resume '{resume.study_name}' o‘chirildi")

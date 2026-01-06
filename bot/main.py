@@ -3,16 +3,15 @@ import sys
 import django
 from dotenv import load_dotenv
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram.client.default import DefaultBotProperties
 
 # Django muhitini sozlash
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # bot papkasidan
+sys.path.append(os.path.dirname(BASE_DIR))
 load_dotenv()
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -25,7 +24,7 @@ from bot.handlers.work import router as work_router
 # Bot token
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Botni yaratish (aiogram 3.7+ sintaksis)
+# Botni yaratish
 bot = Bot(
     token=BOT_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
@@ -41,12 +40,30 @@ dp.include_router(work_router)
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer(
-        "👋 Admin botga xush kelibsiz\n\n"
-        "/portfolio — portfolio ro‘yxati\n"
-        "/resume — resume ro‘yxati\n"
-        "/work — work ro‘yxati"
+        "👋 Admin botga xush kelibsiz!\n\n"
+        "Barcha komandalar uchun /help yozing."
     )
     print(f"Bot start olindi, foydalanuvchi: {message.from_user.id}")
+
+# Help komandasi
+@dp.message(Command("help"))
+async def help_command(message: Message):
+    help_text = (
+        "📌 Bot komandalari:\n\n"
+        "Portfolio:\n"
+        "/portfolio_add — portfolio qo‘shish\n"
+        "/portfolio_list — portfolio ro‘yxati\n"
+        "/portfolio_delete  — portfolio o‘chirish id orqali\n\n"
+        "Resume:\n"
+        "/resume_add — resume qo‘shish\n"
+        "/resume_list — resume ro‘yxati\n"
+        "/resume_delete  — resume o‘chirish id orqali\n\n"
+        "Work:\n"
+        "/work_add — work qo‘shish\n"
+        "/work_list — work ro‘yxati\n"
+        "/work_delete  — work o‘chirish id orqali"
+    )
+    await message.answer(help_text)
 
 if __name__ == "__main__":
     dp.run_polling(bot)
