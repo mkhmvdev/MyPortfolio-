@@ -46,7 +46,6 @@ async def work_about(message: Message, state: FSMContext):
     await state.clear()
 
 
-# Ko'rish
 @router.message(F.text == "/work_list")
 async def list_work(message: Message):
     works = await sync_to_async(list)(WorkExperience.objects.all())
@@ -58,7 +57,6 @@ async def list_work(message: Message):
         text += f"ID: {w.id}\nYil: {w.company_year}\nNom: {w.company_name}\nDescription: {w.company_about}\n\n"
     await message.reply(text)
 
-# O'chirish
 @router.message(F.text.startswith("/work_delete"))
 async def delete_work(message: Message):
     parts = message.text.split()

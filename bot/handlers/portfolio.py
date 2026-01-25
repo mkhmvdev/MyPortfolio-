@@ -50,7 +50,7 @@ async def portfolio_git_url(message: Message, state: FSMContext):
     await state.clear()
 
 
-# Ko'rish
+
 @router.message(F.text == "/portfolio_list")
 async def list_portfolios(message: Message):
     portfolios = await sync_to_async(list)(Portfolio.objects.all())
@@ -62,7 +62,7 @@ async def list_portfolios(message: Message):
         text += f"ID: {p.id}\nNom: {p.name}\nGitHub: {p.git_url}\n\n"
     await message.reply(text)
 
-# O'chirish
+
 @router.message(F.text.startswith("/portfolio_delete"))
 async def delete_portfolio(message: Message):
     parts = message.text.split()

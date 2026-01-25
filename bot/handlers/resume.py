@@ -46,7 +46,7 @@ async def resume_about(message: Message, state: FSMContext):
     await state.clear()
 
 
-# Ko'rish
+
 @router.message(F.text == "/resume_list")
 async def list_resume(message: Message):
     resumes = await sync_to_async(list)(ResumeEducation.objects.all())
@@ -58,7 +58,7 @@ async def list_resume(message: Message):
         text += f"ID: {r.id}\nYil: {r.study_year}\nNom: {r.study_name}\nDescription: {r.study_about}\n\n"
     await message.reply(text)
 
-# O'chirish
+
 @router.message(F.text.startswith("/resume_delete"))
 async def delete_resume(message: Message):
     parts = message.text.split()

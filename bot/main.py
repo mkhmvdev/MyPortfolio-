@@ -9,34 +9,34 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram.client.default import DefaultBotProperties
 
-# Django muhitini sozlash
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # bot papkasidan
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  
 sys.path.append(os.path.dirname(BASE_DIR))
 load_dotenv()
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
-# Handlerlarni import qilish
+
 from bot.handlers.portfolio import router as portfolio_router
 from bot.handlers.resume import router as resume_router
 from bot.handlers.work import router as work_router
 
-# Bot token
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Botni yaratish
+
 bot = Bot(
     token=BOT_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
 
-# Dispatcher
+
 dp = Dispatcher()
 dp.include_router(portfolio_router)
 dp.include_router(resume_router)
 dp.include_router(work_router)
 
-# Start komandasi
+
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer(
@@ -45,7 +45,7 @@ async def start(message: Message):
     )
     print(f"Bot start olindi, foydalanuvchi: {message.from_user.id}")
 
-# Help komandasi
+
 @dp.message(Command("help"))
 async def help_command(message: Message):
     help_text = (
